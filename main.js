@@ -1,4 +1,4 @@
-const {app, BrowserWindow} = require('electron');
+const {app, BrowserWindow, ipcMain} = require('electron');
 
 app.on('ready', () => {
   const mainWindow = new BrowserWindow({
@@ -20,4 +20,10 @@ app.on('ready', () => {
     parent: mainWindow,
   });
   secondWindow.loadFile('second.html');*/
+
+  ipcMain.on('message', (event, arg) => {
+    console.log(arg);
+    // event.sender.send('reply', 'receive ipc from main');
+    mainWindow.send('reply','hello from main use mainWindow')
+  });
 });

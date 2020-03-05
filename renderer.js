@@ -1,8 +1,8 @@
-/*alert(process.versions.node);
+const {ipcRenderer} = require('electron');
+
 window.addEventListener('DOMContentLoaded', () => {
-  alert('hello world');
-});*/
-window.addEventListener('click', () => {
-  alert('you clicked the window');
+  ipcRenderer.send('message', 'hello ipc from renderer');
+  ipcRenderer.on('reply',(event,arg)=>{
+    document.getElementById('message').innerHTML = arg
+  })
 });
-window.alert('script');
