@@ -1,29 +1,40 @@
-const {app, BrowserWindow, ipcMain} = require('electron');
+const {app, BrowserWindow, ipcMain, dialog} = require('electron');
+
+class AppWindow extends BrowserWindow {
+  constructor(config, fileLocation) {
+    const baseConfig = {
+      width: 1000,
+      height: 600,
+      webPreferences: {
+        devTools: true,
+        nodeIntegration: true,
+      },
+    };
+    const finalConfig = {...baseConfig, ...config};
+    super(finalConfig);
+    this.loadFile(fileLocation);
+    this.once('ready-to-show', () => {
+      this.show();
+    });
+  }
+}
 
 app.on('ready', () => {
-  const mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 900,
-    webPreferences: {
-      devTools: true,
-      nodeIntegration: true,
-    }
-  });
+  const mainWindow = new AppWindow({}, './renderer/index.html');
   mainWindow.webContents.openDevTools();
-  mainWindow.loadFile('index.html');
-  /*const secondWindow = new BrowserWindow({
-    width: 400,
-    height: 300,
-    webPreferences: {
-      nodeIntegration: true,
-    },
-    parent: mainWindow,
+  ipcMain.on('add-music-button', (event, arg) => {
+    const addWindow = new AppWindow({
+      width: 400,
+      height: 500,
+      parent: mainWindow,
+    }, './renderer/add.html');
   });
-  secondWindow.loadFile('second.html');*/
-
-  ipcMain.on('message', (event, arg) => {
-    console.log(arg);
-    // event.sender.send('reply', 'receive ipc from main');
-    mainWindow.send('reply','hello from main use mainWindow')
-  });
+  ipcMain.on('open-music-file', ((event, arg) => {
+    dialog.showOpenDialog({
+      properties: ['openFile', 'multiSelections'],
+      filters: [{name: 'Music', extensions: ['mp3']}],
+    }, files => {
+      console.log(files);
+    });
+  }));
 });
