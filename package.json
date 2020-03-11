@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "nodemon --watch main.js --exec 'electron .'",
-    "dist": "build"
+    "dist": "electron-builder"
   },
   "build": {
     "appId": "simpleMusicPlayer",
@@ -13,10 +13,10 @@
       "category": "public.app-category.productivity"
     },
     "dmg": {
-      "background": "build/music.png",
-      "icon": "build/Icon.icns",
+      "background": "build/pic.png",
+      "icon": "build/icon.icns",
       "iconSize": 100,
-      "content": [
+      "contents": [
         {
           "x": 380,
           "y": 380,
@@ -35,29 +35,14 @@
       }
     },
     "linux": {
-      "category": "Chat;GNOME;GTK;Network;InstantMessaging",
-      "packageCategory": "GNOME;GTK;Network;InstantMessaging",
-      "description": "Music player Desktop Client for Linux",
       "target": [
-        "deb",
-        "zip",
         "AppImage",
-        "snap"
-      ],
-      "maintainer": "Akash Nimare <akash@zulipchat.com>",
-      "artifactName": "${productName}-${version}-${arch}.${ext}"
+        "deb"
+      ]
     },
     "win": {
-      "icon": "build/pic.ico",
-      "target": [
-        {
-          "target": "nsis-web",
-          "arch": [
-            "x64",
-            "ia32"
-          ]
-        }
-      ]
+      "target": "squirrel",
+      "icon": "build/icon.ico"
     }
   },
   "repository": "https://github.com/electron/electron-quick-start",
